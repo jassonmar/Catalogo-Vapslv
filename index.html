@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Catálogo de vapes desechables</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&display=swap');
+
+:root{
+  --bg: #0F0B1A;
+  --surface: #1B1430;
+  --border: #322752;
+  --text: #F5F1EC;
+  --text-muted: #A79BC4;
+  --gold: #E8B94D;
+
+  --strip: #FF8FB1;
+  --strip-soft: rgba(255,143,177,0.12);
+  --crystal: #8C9CFF;
+  --crystal-soft: rgba(140,156,255,0.12);
+  --hyppe: #35D999;
+  --hyppe-soft: rgba(53,217,153,0.12);
+
+  --radius: 14px;
+}
+
+*{ box-sizing: border-box; }
+
+body{
+  margin: 0;
+  background: var(--bg);
+  background-image:
+    radial-gradient(700px 400px at 85% -5%, rgba(140,156,255,0.10), transparent 60%),
+    radial-gradient(600px 380px at 5% 0%, rgba(255,143,177,0.08), transparent 60%);
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+a{ color: inherit; text-decoration: none; }
+img{ max-width: 100%; display: block; }
+
+.wrap{ max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+
+.topbar{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.topbar .shipping{
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13.5px;
+  color: var(--text-muted);
+}
+
+.topbar .shipping svg{ width: 18px; height: 18px; flex-shrink: 0; }
+
+.hero{ padding: 56px 0 30px; }
+
+.hero h1{
+  font-family: 'Anton', sans-serif;
+  font-weight: 400;
+  font-size: clamp(38px, 7vw, 62px);
+  line-height: 0.98;
+  margin: 0 0 16px;
+  letter-spacing: 0.5px;
+  max-width: 14ch;
+}
+
+.hero p{
+  font-size: 16.5px;
+  color: var(--text-muted);
+  max-width: 46ch;
+  margin: 0;
+}
+
+.tabs{
+  display: flex;
+  gap: 10px;
+  padding: 28px 0 6px;
+  flex-wrap: wrap;
+}
+
+.tab-btn{
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 10px 18px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.tab-btn:hover{ color: var(--text); }
+
+.tab-btn.active{
+  color: var(--bg);
+  background: var(--tab-accent, var(--gold));
+  border-color: var(--tab-accent, var(--gold));
+}
+
+.lines{
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+  padding: 26px 0 70px;
+}
+
+@media (max-width: 820px){ .lines{ grid-template-columns: 1fr; } }
+
+.line-card{
+  display: block;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.18s ease, border-color 0.18s ease;
+  border-top: 3px solid var(--card-accent, var(--gold));
+}
+
+.line-card:hover{ transform: translateY(-4px); border-color: var(--card-accent, var(--gold)); }
+
+.line-card .photo{
+  aspect-ratio: 3 / 4;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.line-card .photo img{ height: 90%; width: 90%; object-fit: contain; }
+
+.line-card .info{ padding: 20px 22px 24px; }
+
+.line-card .eyebrow{
+  font-size: 12.5px;
+  color: var(--card-accent, var(--gold));
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.line-card h2{
+  font-family: 'Anton', sans-serif;
+  font-weight: 400;
+  font-size: 26px;
+  margin: 0 0 10px;
+  letter-spacing: 0.3px;
+}
+
+.line-card .price{ font-size: 15px; color: var(--text-muted); margin-top: 14px; }
+.line-card .price strong{ color: var(--gold); font-size: 20px; }
+.line-card .cta{ font-size: 14px; font-weight: 600; color: var(--card-accent, var(--gold)); margin-top: 14px; }
+
+.line-panel{ display: none; padding-bottom: 60px; }
+.line-panel.active{ display: block; }
+
+.line-header{ padding: 26px 0 8px; }
+
+.line-header .accent-tag{
+  display: inline-block;
+  font-size: 12.5px;
+  font-weight: 700;
+  padding: 5px 12px;
+  border-radius: 999px;
+  margin-bottom: 14px;
+}
+
+.line-header h1{
+  font-family: 'Anton', sans-serif;
+  font-weight: 400;
+  font-size: clamp(32px, 6vw, 48px);
+  margin: 0 0 10px;
+}
+
+.line-header .stats{ color: var(--text-muted); font-size: 15px; margin: 0; }
+
+.flavors{
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  padding: 26px 0 20px;
+}
+
+@media (max-width: 900px){ .flavors{ grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 560px){ .flavors{ grid-template-columns: 1fr; } }
+
+.flavor-card{
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.flavor-card .photo{
+  aspect-ratio: 3 / 4;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.flavor-card .photo img{ height: 92%; width: 92%; object-fit: contain; }
+
+.flavor-card .info{ padding: 16px 18px 18px; }
+.flavor-card h3{ font-size: 16.5px; font-weight: 600; margin: 0 0 6px; line-height: 1.3; }
+
+.flavor-card .badges{ display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
+
+.flavor-card .badge{
+  font-size: 11.5px;
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+  padding: 3px 9px;
+  border-radius: 999px;
+}
+
+.flavor-card .price{ font-size: 19px; font-weight: 700; color: var(--gold); }
+
+.legal{
+  border-top: 1px solid var(--border);
+  padding: 26px 0 50px;
+  color: var(--text-muted);
+  font-size: 12.5px;
+  max-width: 70ch;
+}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="topbar">
+    <div class="shipping">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 7h11v9H3z"/><path d="M14 10h4l3 3v3h-7z"/><circle cx="7" cy="18" r="1.6"/><circle cx="17.5" cy="18" r="1.6"/></svg>
+      Envíos a todo el país
+    </div>
+  </div>
+
+  <section class="hero">
+    <h1>Puffs sin límite</h1>
+    <p>Elige tu línea de vapes desechables y mira todos los sabores disponibles.</p>
+  </section>
+
+  <div class="tabs">
+    <button class="tab-btn active" style="--tab-accent: var(--gold);" onclick="showTab('inicio', this)">Inicio</button>
+    <button class="tab-btn" style="--tab-accent: var(--strip);" onclick="showTab('strip', this)">Strip</button>
+    <button class="tab-btn" style="--tab-accent: var(--crystal);" onclick="showTab('crystal', this)">SKE Crystal</button>
+    <button class="tab-btn" style="--tab-accent: var(--hyppe);" onclick="showTab('hyppe', this)">Hyppe Infiniti</button>
+  </div>
+
+  <div id="panel-inicio" class="line-panel active">
+    <section class="lines">
+      <div class="line-card" style="--card-accent: var(--strip);" onclick="showTabByName('strip')">
+        <div class="photo"><img src="portada.png" alt="Vape desechable STRIP"></div>
+        <div class="info">
+          <div class="eyebrow">Línea económica</div>
+          <h2>Strip</h2>
+          <div class="price">600+ puffs · desde <strong>$7.99</strong></div>
+          <div class="cta">Ver sabores →</div>
+        </div>
+      </div>
+
+      <div class="line-card" style="--card-accent: var(--crystal);" onclick="showTabByName('crystal')">
+        <div class="photo"><img src="portada2.png" alt="Vape desechable SKE Crystal S5000"></div>
+        <div class="info">
+          <div class="eyebrow">Línea intermedia</div>
+          <h2>SKE Crystal</h2>
+          <div class="price">5000+ puffs · desde <strong>$14.99</strong></div>
+          <div class="cta">Ver sabores →</div>
+        </div>
+      </div>
+
+      <div class="line-card" style="--card-accent: var(--hyppe);" onclick="showTabByName('hyppe')">
+        <div class="photo"><img src="idk.png" alt="Vape desechable HYPPE Infiniti"></div>
+        <div class="info">
+          <div class="eyebrow">Línea premium</div>
+          <h2>Hyppe Infiniti</h2>
+          <div class="price">50 000+ puffs · desde <strong>$24.99</strong></div>
+          <div class="cta">Ver sabores →</div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div id="panel-strip" class="line-panel">
+    <div class="line-header">
+      <div class="accent-tag" style="color: var(--strip); background: var(--strip-soft);">Línea económica</div>
+      <h1>Strip</h1>
+      <p class="stats">600+ puffs · desde $7.99 por unidad</p>
+    </div>
+    <section class="flavors">
+      <div class="flavor-card">
+        <div class="photo"><img src="portada.png" alt="Strip sabor Peach"></div>
+        <div class="info">
+          <h3>Peach</h3>
+          <div class="badges"><span class="badge">600+ puffs</span><span class="badge">2% nicotina</span></div>
+          <div class="price">$7.99</div>
+        </div>
+      </div>
+      <div class="flavor-card">
+        <div class="photo"><img src="blue.png" alt="Strip sabor Blueberry Sour Raspberry"></div>
+        <div class="info">
+          <h3>Blue Fusion</h3>
+          <div class="badges"><span class="badge">600+ puffs</span><span class="badge">2% nicotina</span></div>
+          <div class="price">$7.99</div>
+        </div>
+      </div>
+      <div class="flavor-card">
+        <div class="photo"><img src="kiwi.png" alt="Strip sabor Kiwi Passion Fruit Guava"></div>
+        <div class="info">
+          <h3>Kiwi passion fruit guava</h3>
+          <div class="badges"><span class="badge">600+ puffs</span><span class="badge">2% nicotina</span></div>
+          <div class="price">$7.99</div>
+        </div>
+      </div>
+      <div class="flavor-card">
+        <div class="photo"><img src="limonada.png" alt="Strip sabor Blue Razz Lemonade"></div>
+        <div class="info">
+          <h3>Blue razz lemonade</h3>
+          <div class="badges"><span class="badge">600+ puffs</span><span class="badge">2% nicotina</span></div>
+          <div class="price">$7.99</div>
+        </div>
+      </div>
+      <div class="flavor-card">
+        <div class="photo"><img src="sandia.png" alt="Strip sabor Watermelon Strawberry"></div>
+        <div class="info">
+          <h3>Watermelon strawberry</h3>
+          <div class="badges"><span class="badge">600+ puffs</span><span class="badge">2% nicotina</span></div>
+          <div class="price">$7.99</div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div id="panel-crystal" class="line-panel">
+    <div class="line-header">
+      <div class="accent-tag" style="color: var(--crystal); background: var(--crystal-soft);">Línea intermedia</div>
+      <h1>SKE Crystal</h1>
+      <p class="stats">5000+ puffs · desde $14.99 por unidad</p>
+    </div>
+    <section class="flavors">
+      <div class="flavor-card">
+        <div class="photo"><img src="verde.png" alt="SKE Crystal sabor Blueberry Raspberries"></div>
+        <div class="info">
+          <h3>Gummy bear</h3>
+          <div class="badges"><span class="badge">5000+ puffs</span><span class="badge">5% nicotina</span></div>
+          <div class="price">$14.99</div>
+        </div>
+      </div>
+      <div class="flavor-card">
+        <div class="photo"><img src="mora.png" alt="SKE Crystal sabor Cherry Ice"></div>
+        <div class="info">
+          <h3>Blueberry raspberries</h3>
+          <div class="badges"><span class="badge">5000+ puffs</span><span class="badge">5% nicotina</span></div>
+          <div class="price">$14.99</div>
+        </div>
+      </div>
+      <div class="flavor-card">
+        <div class="photo"><img src="cereza.png" alt="SKE Crystal sabor Cola Ice"></div>
+        <div class="info">
+          <h3>Cherry ice</h3>
+          <div class="badges"><span class="badge">5000+ puffs</span><span class="badge">5% nicotina</span></div>
+          <div class="price">$14.99</div>
+        </div>
+      </div>
+      <div class="flavor-card">
+        <div class="photo"><img src="raspberry.png" alt="SKE Crystal sabor Blueberry Sour Raspberry"></div>
+        <div class="info">
+          <h3>Blueberry sour raspberry</h3>
+          <div class="badges"><span class="badge">5000+ puffs</span><span class="badge">5% nicotina</span></div>
+          <div class="price">$14.99</div>
+        </div>
+      </div>
+      <div class="flavor-card">
+        <div class="photo"><img src="cola.png" alt="SKE Crystal sabor Gummy Bear"></div>
+        <div class="info">
+          <h3>Cola ice</h3>
+          <div class="badges"><span class="badge">5000+ puffs</span><span class="badge">5% nicotina</span></div>
+          <div class="price">$14.99</div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div id="panel-hyppe" class="line-panel">
+    <div class="line-header">
+      <div class="accent-tag" style="color: var(--hyppe); background: var(--hyppe-soft);">Línea premium</div>
+      <h1>Hyppe Infiniti</h1>
+      <p class="stats">50 000 puffs normal · 35 000 en modo boost · desde $24.99 por unidad</p>
+    </div>
+    <section class="flavors">
+      <div class="flavor-card">
+        <div class="photo"><img src="nekend.png" alt="Hyppe Infiniti Naked"></div>
+        <div class="info">
+          <h3>Naked</h3>
+          <div class="badges"><span class="badge">50k / 35k boost</span><span class="badge">5% nicotina</span></div>
+          <div class="price">$24.99</div>
+        </div>
+      </div>
+      <div class="flavor-card">
+        <div class="photo"><img src="lemonade.png" alt="Hyppe Infiniti sabor Blue Razz Lemonade"></div>
+        <div class="info">
+          <h3>Blue razz lemonade</h3>
+          <div class="badges"><span class="badge">50k / 35k boost</span><span class="badge">5% nicotina</span></div>
+          <div class="price">$24.99</div>
+        </div>
+      </div>
+      <div class="flavor-card">
+        <div class="photo"><img src="mint.png" alt="Hyppe Infiniti sabor Cool Mint"></div>
+        <div class="info">
+          <h3>Cool mint</h3>
+          <div class="badges"><span class="badge">50k / 35k boost</span><span class="badge">5% nicotina</span></div>
+          <div class="price">$24.99</div>
+        </div>
+      </div>
+      <div class="flavor-card">
+        <div class="photo"><img src="mighty.png" alt="Hyppe Infiniti sabor Mighty Mint"></div>
+        <div class="info">
+          <h3>Mighty mint</h3>
+          <div class="badges"><span class="badge">50k / 35k boost</span><span class="badge">5% nicotina</span></div>
+          <div class="price">$24.99</div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+</div>
+
+<script>
+function showTabByName(name){
+  const btns = document.querySelectorAll('.tab-btn');
+  btns.forEach(b => {
+    if (b.getAttribute('onclick').includes("'" + name + "'")) {
+      showTab(name, b);
+    }
+  });
+}
+
+function showTab(name, btn){
+  document.querySelectorAll('.line-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('panel-' + name).classList.add('active');
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+</script>
+
+</body>
+</html>
